@@ -1,0 +1,157 @@
+<!DOCTYPE HTML>
+<html lang ="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact US</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+      /* styling for contact us form */
+input[type=text], select, textarea {
+width: 100%;
+padding: 14px;
+border: none;
+border-radius: 5px;
+box-sizing: border-box;
+margin-top: 20px; 
+margin-bottom: 20px;
+resize: vertical;
+color: #56735D;
+}
+input[type=submit] {
+background-color: #6EB191;
+color: #fff;
+padding: 12px 20px;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+}
+input[type=submit]:hover {
+background-color: #56735D;
+}
+.containerx {
+border-radius: 0px;
+background: radial-gradient(#ded,#6EB191);
+padding: 20px;
+}
+      
+  </style>
+
+</head>
+<body>
+    <a name="top"></a>
+    <!-- header -->
+    <div class="header">
+    <div class="container">
+    <div class="navbar" id="navbar">
+        <div class="logo">
+            <img src="./images/sitelogo.png" width="125px" alt="logo">
+        </div>
+        <nav>
+            <ul id="MenuItems">
+                <li><div class="searchbtn">
+                    <input type="text" placeholder="Search..">
+                </div>
+                </li>
+                <li><a href="./index.html">Home</a></li>
+                <li><a href="./blog.html">Blog</a></li>
+                <li><a href="./login.html">Profile</a></li>
+            </ul>
+        </nav>
+        <img src="./images/bag.png" class="bagimg"  width="30px" height="30px">
+        <img src="./images/menu.png" class="menu-icon" onclick="menutoggle()">
+    </div>
+    </div>
+    </div>
+
+
+<!-- form -->
+
+<div class="containerx">
+  <form action="action_page.php">
+
+    <label for="fname">First Name</label>
+    <input type="text" id="fname" name="firstname" placeholder="Your name..">
+
+    <label for="lname">Last Name</label>
+    <input type="text" id="lname" name="lastname" placeholder="Your last name..">
+      
+    <label for="usermail">Enter your email</label>
+    <input type="email" id="useremail" name="user-email" placeholder="hellothere@ecellmnnit.com">
+
+    <label for="usermob">Enter your mobile no</label>
+    <input type="tel" id="usermob" name="user-mob" placeholder="1270015050">
+
+    <label for="country">Country</label>
+    <select id="country" name="country">
+      <option value="india">India</option>
+      <option value="asgard">Asgard</option>
+      <option value="Ram Rajya">Ram Rajya</option>
+      <option value="Naruto">Hidden Leaf village</option>
+    </select>
+
+    <label for="reason">Chose reason for contact</label>
+    <select id="reason" name="reason">
+      <option value="OT">Order Tracking</option>
+      <option value="return">Return Product</option>
+      <option value="crybaby">Complaints</option>
+      <option value="paisahipaisa">Affiliate program</option>
+    </select>
+
+    <label for="subject">Subject</label>
+    <textarea id="subject" name="subject" placeholder="Your text goes here.." style="height:200px"></textarea>
+
+    <input type="submit" value="Submit">
+
+  </form>
+</div> 
+
+
+<!--footer-->
+
+<div class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="footer-col-1">
+                <h3>Download our app</h3>
+                <p>Fastest Checkout in just one click</p>
+                <div class="applogo">
+                    <img src="./images/play-store.png">
+                    <img src="./images/app-store.png">
+                </div>
+            </div>
+            <div class="footer-col-2">
+                <img src="./images/sitelogo.png">
+                <p>Stay stylish. Just like BINOD</p>
+            </div>
+            <div class="footer-col-3">
+                <h3>Useful links</h3>
+                <ul>
+                    <li>Coupons</li>
+                    <li>Return Policy</li>
+                    <li>T&C</li>
+                    <li><a href="./contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-col-4">
+                <h3>Follow us</h3>
+                <ul>
+                    <li>Facebook</li>
+                    <li>Instagram</li>
+                    <li>Twitter</li>
+                    <li>Youtube</li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <p class="copyright">&#169;Copyright 2021 BINOD.OP</p>
+        <p align="right"><a href="#top">Back to Top</a></p>
+    </div>
+</div>
+
+
+<script src="./app.js"></script>
+</body>    
+</html>

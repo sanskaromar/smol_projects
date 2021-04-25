@@ -1,0 +1,196 @@
+<!DOCTYPE HTML>
+<html lang ="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <a name="top"></a>
+    <!-- header -->
+    <div class="header">
+    <div class="container">
+    <div class="navbar" id="navbar">
+        <div class="logo">
+            <img src="./images/sitelogo.png" width="125px" alt="logo">
+        </div>
+        <nav>
+            <ul id="MenuItems">
+                <li><div class="searchbtn">
+                    <input type="text" placeholder="Search..">
+                </div>
+                </li>
+                <li><a href="./index.html">Home</a></li>
+                <li><a href="#Exclusive">Exclusive Products</a></li>
+                <li><a href="./blog.html">Blog</a></li>
+                <li><a href="./login.html">Profile</a></li>
+            </ul>
+        </nav>
+        <img src="./images/bag.png" class="bagimg"  width="30px" height="30px">
+        <img src="./images/menu.png" class="menu-icon" onclick="menutoggle()">
+    </div>
+    </div>
+    </div>
+
+<!-- cart items details -->
+<div class="smallcontainer checkout">
+    <table>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+        </tr>
+
+        <tr>
+            <td>
+                <div class="cart-info">
+                    <img src="./images/Akali_6.jpg">
+                    <div>
+                        <p>Akali Cosplay</p>
+                        <small>Price &#8377; 49,999</small>
+                        <br>
+                        <a href="">Remove</a>
+                    </div>
+                </div>
+            </td>
+            <td><input type="number" value="1"></td>
+            <td><b>&#8377;49,999</b></td>
+        </tr>
+        <tr>
+            <td>
+                <div class="cart-info">
+                    <img src="./images/4.jpg">
+                    <div>
+                        <p>Bridal Lehnga</p>
+                        <small>Price &#8377; 49,999</small>
+                        <br>
+                        <a href="">Remove</a>
+                    </div>
+                </div>
+            </td>
+            <td><input type="number" value="1"></td>
+            <td><b>&#8377;29,999</b></td>
+        </tr>
+        <tr>
+            <td>
+                <div class="cart-info">
+                    <img src="./images/22.jpg">
+                    <div>
+                        <p>Diana Cosplay</p>
+                        <small>Price &#8377; 49,999</small>
+                        <br>
+                        <a href="">Remove</a>
+                    </div>
+                </div>
+            </td>
+            <td><input type="number" value="1"></td>
+            <td><b>&#8377;89,999</b></td>
+        </tr>
+        <tr>
+            <td>
+                <div class="cart-info">
+                    <img src="./images/6.jpg">
+                    <div>
+                        <p>White & Blue Formals</p>
+                        <small>Price &#8377; 9,999</small>
+                        <br>
+                        <a href="">Remove</a>
+                    </div>
+                </div>
+            </td>
+            <td><input type="number" value="1"></td>
+            <td><b>&#8377;9,999</b></td>
+        </tr>
+
+    </table>
+
+<div class="total">
+    <table>
+        <tr>
+            <td>Subotal</td>
+            <td>&#8377 1,79,996</td>
+        </tr>
+        <tr>
+            <td>Tax</td>
+            <td>&#8377 32,400</td>
+        </tr>
+        <tr>
+            <td>Total</td>
+            <td>&#8377 2,12,396</td>
+        </tr>
+    </table>
+</div>
+
+</div>
+
+<!--exclusive offer-->
+<br><br><br>
+<a name="Exclusive"></a>
+<div class="offer">
+    <div class="smallcontainer">
+        <div class="row">
+            <div class="col-2">
+                <img src="./images/23.jpg" class="offer-img">
+            </div>
+            <div class="col-2">
+                <p>Exclusively on BINOD.OP</p>
+                <h1>Dark Waters Diana Cosplay</h1>
+                <small>Bearing her crescent moonblade, clad in shimmering armor the color 
+                of winter snow at night, complete cosplay set of Blood Moon Diana, a
+                living embodiment of the blood moon's power.</small><br>
+                <a href="./productdetail2.html" class="btn">Buy Now &#8594;</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--footer-->
+
+<div class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="footer-col-1">
+                <h3>Download our app</h3>
+                <p>Fastest Checkout in just one click</p>
+                <div class="applogo">
+                    <img src="./images/play-store.png">
+                    <img src="./images/app-store.png">
+                </div>
+            </div>
+            <div class="footer-col-2">
+                <img src="./images/sitelogo.png">
+                <p>Stay stylish. Just like BINOD</p>
+            </div>
+            <div class="footer-col-3">
+                <h3>Useful links</h3>
+                <ul>
+                    <li>Coupons</li>
+                    <li>Return Policy</li>
+                    <li>T&C</li>
+                    <li><a href="./contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-col-4">
+                <h3>Follow us</h3>
+                <ul>
+                    <li>Facebook</li>
+                    <li>Instagram</li>
+                    <li>Twitter</li>
+                    <li>Youtube</li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <p class="copyright">&#169;Copyright 2021 BINOD.OP</p>
+        <p align="right"><a href="#top">Back to Top</a></p>
+    </div>
+</div>
+
+
+<script src="./app.js"></script>
+</body>    
+</html>
