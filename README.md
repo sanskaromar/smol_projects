@@ -13,3 +13,6 @@ I made them anyway so that i can learn various things i'm currently learning.
 PEP8 guidelines have been followed throughout the code.
 -->```
 
+```diff
+Some projects are hosted with links on their README.md
+```
