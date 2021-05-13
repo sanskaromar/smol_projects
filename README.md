@@ -13,6 +13,6 @@ I made them anyway so that i can learn various things i'm currently learning.
 PEP8 guidelines have been followed throughout the code.
 -->```
 
-```diff
-Some projects are hosted with links on their README.md
-```
+## links of hosted projects
+- [BINOD.OP](https://sanskaromar.github.io/smol_projects/BINOD-MERCHANDISE/)
+- [Image_Gallery_Webpage](https://sanskaromar.github.io/smol_projects/Image_Gallery_Webpage/)
