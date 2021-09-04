@@ -17,3 +17,4 @@ PEP8 guidelines have been followed throughout the code.
 ## links of hosted projects
 - [BINOD.OP](https://sanskaromar.github.io/smol_projects/BINOD-MERCHANDISE/)
 - [Image_Gallery_Webpage](https://sanskaromar.github.io/smol_projects/Image_Gallery_Webpage/)
+- [A sample webpage](https://sanskaromar.github.io/smol_projects/a-sample-webpage/)
