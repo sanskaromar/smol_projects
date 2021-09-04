@@ -1,0 +1,215 @@
+body {
+  background-color: #f2f2f2;
+  font-family: "Ruda", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #2f2f2f;
+}
+
+/* Header Image */
+
+.bg-img {
+  background: url(../img/bg-img.jpg) no-repeat center top;
+  margin-top: 0px;
+  padding-top: 50px;
+  background-attachment: relative;
+  background-position: center center;
+  min-height: 450px;
+  width: 100%;
+}
+.bg-img-text {
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 50px;
+  text-align: center;
+  position: absolute;
+  line-height: 1.1em;
+  top: 180px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Header Button */
+
+.btn-outline-success {
+  color: #ffffff;
+  font-weight: 400;
+  font-size: 13px;
+  position: absolute;
+  left: 45%;
+  background-color: transparent;
+  border-color: #ffffff;
+  margin-top: 2em;
+  letter-spacing: 2px;
+  margin-bottom: 25px;
+}
+.btn-outline-success:hover,
+.btn-outline-success:focus,
+.btn-outline-success:active,
+.btn-outline-success.active,
+.open .dropdown-toggle.btn-cta {
+  color: #2f2f2f;
+  background-color: #ffffff;
+  border-color: #2f2f2f;
+}
+.btn1 {
+  top: 320px;
+}
+
+.mt {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.centered {
+  text-align: center;
+}
+
+h3 {
+  font-weight: 900;
+  color: #3c3c3c;
+  font-size: 25px;
+}
+
+/* Class for hr after headings */
+
+.hr {
+  height: 2px;
+  width: 320px;
+  margin: 0.2em;
+  border: none;
+  margin-left: 29em;
+}
+
+/* 3 cards responsive layout */
+
+.cards-3 p {
+  font-size: 14px;
+  font-weight: 600;
+  color: #5c5c5c;
+  margin-top: 15px;
+}
+.cards-3 p > i {
+  font-size: 16px;
+  color: #555555;
+}
+.cards-3 p.cards-3-text {
+  font-weight: 400;
+  font-size: 13px;
+  margin-top: -10px;
+}
+.cards-3 p.time {
+  font-weight: 400;
+  font-size: 12px;
+  margin-top: 0px;
+  color: #555555;
+  text-align: right;
+}
+.cards-3 p.time > i {
+  font-size: 12px;
+}
+
+/* Quote Image */
+
+.bg-img-2 {
+  background: url(../img/bg-img-2l.png) no-repeat center top;
+  filter: grayscale(100%) blur(0) opacity(0.85) brightness(95%);
+  margin-top: 0px;
+  padding-top: 100px;
+  text-align: center;
+  background-attachment: relative;
+  background-position: center center;
+  min-height: 350px;
+  width: 100%;
+}
+.bg-img-text-2 {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 28px;
+  text-align: center;
+  position: absolute;
+  line-height: 1.1em;
+  top: 100px;
+  left: 60%;
+  transform: translate(-50%, -50%);
+}
+
+/* Quote Image button */
+
+.btn2 {
+  top: 220px;
+}
+
+/* View Our Portfolio Button */
+
+.btn3 {
+  color: #ffffff;
+  font-weight: 400;
+  font-size: 12px;
+  position: absolute;
+  left: 42.5%;
+  background-color: #73c9be;
+  border-color: #ffffff;
+  margin-top: 0em;
+  letter-spacing: 2px;
+  margin-bottom: 25px;
+}
+.btn3:hover,
+.btn3:focus,
+.btn3:active,
+.btn3.active,
+.open .dropdown-toggle.btn-cta {
+  color: #73c9be;
+  background-color: #ffffff;
+  border-color: #73c9be;
+}
+
+/* Brands & Clients div */
+
+.client {
+  background-color: #f7f7f7;
+  width: 100%;
+  margin-top: 100px;
+  min-height: 300px;
+}
+.client .row > h3 {
+  margin-top: 50px;
+}
+
+.pt {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+/* Footer */
+
+.footer {
+  background-color: #2f2f2f;
+  margin-top: 0px;
+  min-height: 300px;
+  min-width: 100%;
+}
+.footer .row > h3 {
+  margin-top: 50px;
+  color: #ffffff;
+}
+.footer .row > hr {
+  height: 2px;
+  width: 320px;
+  margin: 0.2em;
+  border: none;
+  margin-left: 36.5em;
+  color: #ffffff;
+}
+.footer .row .col-lg-7 > p {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 400;
+}
+.footer .row div {
+  margin: auto;
+}
+.footer div {
+  margin-left: auto;
+  margin-right: auto;
+}
