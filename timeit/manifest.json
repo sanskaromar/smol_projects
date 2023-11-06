@@ -1,0 +1,13 @@
+{
+    "manifest_version": 3,
+    "name": "Timeit",
+    "version": "1.0",
+    "description": "A Timer extension for chrome",
+    "permissions": [
+      "activeTab"
+    ],
+    "action": {
+      "default_popup": "popup.html"
+    }
+  }
+  
