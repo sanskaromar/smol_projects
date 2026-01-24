@@ -75,9 +75,10 @@
             color: white;
             cursor: pointer;
             font-size: 14px;
-            transition: background 0.2s;
+            transition: background 0.2s, transform 0.1s;
         }
         button:hover { background-color: #0056b3; }
+        button:active { transform: translateY(1px); }
         
         button.active {
             outline: 2px solid #333;
@@ -283,6 +284,13 @@
                 <span class="color-swatch" style="background:#333;"></span>
             </button>
         </div>
+
+        <!-- File Operations -->
+        <div class="control-row" style="border-top: 1px solid #eee; padding-top: 15px; margin-top: 5px;">
+            <span class="group-label">File:</span>
+            <button onclick="app.exportGrid()" style="background-color: #6c757d;" title="Save progress to file">⬇ Export JSON</button>
+            <button onclick="app.importGrid()" style="background-color: #6c757d;" title="Load progress from file">⬆ Import JSON</button>
+        </div>
         
         <div class="status-bar" id="status-text">
             Design Mode: Click and drag to paint cells. Change tools above.
@@ -444,6 +452,68 @@ class CrosswordApp {
 
     clearHighlights() {
         document.querySelectorAll('.header-highlight').forEach(el => el.classList.remove('header-highlight'));
+    }
+
+    // --- File Operations ---
+
+    exportGrid() {
+        const data = {
+            rows: this.rows,
+            cols: this.cols,
+            gridData: this.gridData,
+            timestamp: new Date().toISOString()
+        };
+        const json = JSON.stringify(data, null, 2);
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `crossword_save_${new Date().toISOString().slice(0,10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    importGrid() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    // Basic Validation
+                    if (!data.rows || !data.cols || !data.gridData) {
+                        alert("Invalid crossword file format.");
+                        return;
+                    }
+
+                    this.rows = data.rows;
+                    this.cols = data.cols;
+                    this.gridData = data.gridData;
+
+                    // Update UI Inputs
+                    document.getElementById('grid-width').value = this.cols;
+                    document.getElementById('grid-height').value = this.rows;
+
+                    this.render();
+                    alert("Crossword loaded successfully!");
+
+                } catch (err) {
+                    alert("Error parsing file: " + err.message);
+                }
+            };
+            reader.readAsText(file);
+        };
+        input.click();
     }
 
     render() {
