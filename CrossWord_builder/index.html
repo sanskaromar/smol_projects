@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crossword Generator & Solver</title>
+    <style>
+        :root {
+            --c-white: #ffffff;
+            --c-red: #ffcccc; /* Pastel red for better readability */
+            --c-blue: #cce5ff; /* Pastel blue */
+            --c-yellow: #fff9c4; /* Pastel yellow */
+            --c-black: #333333;
+            --c-uneditable: #e0e0e0; /* Light gray for blockers */
+            --c-border: #999;
+            --c-highlight: #4CAF50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 { margin-bottom: 10px; }
+
+        /* --- CONTROLS SECTION --- */
+        .controls-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .control-row {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .group-label {
+            font-weight: bold;
+            font-size: 0.9em;
+            color: #666;
+            margin-right: 5px;
+        }
+
+        /* Inputs & Buttons */
+        input[type="number"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 60px;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        button:hover { background-color: #0056b3; }
+        
+        button.active {
+            outline: 2px solid #333;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
+            transform: translateY(1px);
+        }
+
+        /* Tool Palette */
+        .tool-palette {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .tool-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: #eee;
+            color: #333;
+            border: 2px solid transparent;
+        }
+
+        .color-swatch {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            border: 1px solid rgba(0,0,0,0.2);
+            display: inline-block;
+        }
+
+        /* Tool specific styles */
+        .tool-btn[data-tool="editable"] .icon { color: green; font-weight: bold; }
+        .tool-btn[data-tool="uneditable"] .icon { color: gray; font-weight: bold; }
+
+        /* Mode Switcher */
+        .mode-switch {
+            display: flex;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid #ccc;
+        }
+        .mode-btn {
+            border-radius: 0;
+            background: #f0f0f0;
+            color: #555;
+            padding: 10px 20px;
+        }
+        .mode-btn.active-mode {
+            background: #28a745;
+            color: white;
+        }
+
+        /* --- GRID SECTION --- */
+        #grid-container {
+            display: grid;
+            gap: 1px;
+            background-color: #999; /* Grid lines color */
+            border: 2px solid #555;
+            padding: 2px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .cell {
+            width: 40px;
+            height: 40px;
+            background-color: var(--c-white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            box-sizing: border-box;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Colors */
+        .bg-white { background-color: var(--c-white); }
+        .bg-red { background-color: var(--c-red); }
+        .bg-blue { background-color: var(--c-blue); }
+        .bg-yellow { background-color: var(--c-yellow); }
+        .bg-black { background-color: var(--c-black); color: white; }
+
+        /* Edit Mode Visuals */
+        .edit-mode .cell {
+            cursor: crosshair;
+        }
+        .edit-mode .cell.type-uneditable::after {
+            content: '×';
+            color: rgba(0,0,0,0.3);
+            font-size: 24px;
+            position: absolute;
+        }
+        .edit-mode .cell:hover {
+            opacity: 0.8;
+            border: 2px solid #333;
+            z-index: 10;
+        }
+
+        /* Solve Mode Visuals */
+        .solve-mode .cell.type-uneditable {
+            background-color: var(--c-uneditable) !important; /* Force gray */
+            pointer-events: none;
+        }
+        
+        /* If user colored a non-editable cell, we might want to hint at it, 
+           but the requirement says "shown in light gray". 
+           We will apply a strong overlay or simple gray override. */
+
+        .solve-mode input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font-family: inherit;
+            font-size: inherit;
+            font-weight: inherit;
+            color: inherit;
+            outline: none;
+            padding: 0;
+            text-transform: uppercase;
+        }
+
+        .solve-mode .cell.bg-black input { color: white; }
+        
+        /* Instructions */
+        .status-bar {
+            margin-top: 10px;
+            font-style: italic;
+            color: #666;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>Crossword Builder</h1>
+
+    <div class="controls-container">
+        <!-- Dimensions -->
+        <div class="control-row">
+            <span class="group-label">Grid Size:</span>
+            <label>W: <input type="number" id="grid-width" value="10" min="1"></label>
+            <label>H: <input type="number" id="grid-height" value="10" min="1"></label>
+            <button onclick="app.updateDimensions()">Update Grid</button>
+            <span style="flex-grow:1"></span>
+            
+            <!-- Mode Toggle -->
+            <div class="mode-switch">
+                <button class="mode-btn active-mode" id="btn-mode-edit" onclick="app.setMode('edit')">✏️ Design</button>
+                <button class="mode-btn" id="btn-mode-solve" onclick="app.setMode('solve')">🧩 Solve</button>
+            </div>
+        </div>
+
+        <!-- Edit Tools (Only visible in Edit Mode) -->
+        <div class="control-row" id="edit-toolbar">
+            <span class="group-label">Tools:</span>
+            
+            <!-- Status Tools -->
+            <button class="tool-btn active" onclick="app.setTool('status', 'editable')" title="Make cell writable">
+                <span class="icon">✓</span> Editable
+            </button>
+            <button class="tool-btn" onclick="app.setTool('status', 'uneditable')" title="Make cell a blocker">
+                <span class="icon">×</span> Uneditable
+            </button>
+
+            <div style="width: 1px; height: 30px; background: #ddd; margin: 0 10px;"></div>
+
+            <!-- Color Tools -->
+            <button class="tool-btn" onclick="app.setTool('color', 'bg-white')">
+                <span class="color-swatch" style="background:white;"></span>
+            </button>
+            <button class="tool-btn" onclick="app.setTool('color', 'bg-red')">
+                <span class="color-swatch" style="background:#ffcccc;"></span>
+            </button>
+            <button class="tool-btn" onclick="app.setTool('color', 'bg-blue')">
+                <span class="color-swatch" style="background:#cce5ff;"></span>
+            </button>
+            <button class="tool-btn" onclick="app.setTool('color', 'bg-yellow')">
+                <span class="color-swatch" style="background:#fff9c4;"></span>
+            </button>
+            <button class="tool-btn" onclick="app.setTool('color', 'bg-black')">
+                <span class="color-swatch" style="background:#333;"></span>
+            </button>
+        </div>
+        
+        <div class="status-bar" id="status-text">
+            Design Mode: Click cells to apply properties. Change tools above.
+        </div>
+    </div>
+
+    <div id="grid-container" class="edit-mode"></div>
+
+<script>
+class CrosswordApp {
+    constructor() {
+        this.rows = 10;
+        this.cols = 10;
+        this.gridData = []; // Stores { type: 'editable'|'uneditable', color: 'bg-white', value: '' }
+        this.mode = 'edit'; // 'edit' or 'solve'
+        
+        // Current active tool
+        this.activeTool = {
+            category: 'status', // 'status' or 'color'
+            value: 'editable'   // 'editable', 'uneditable', 'bg-red', etc.
+        };
+
+        this.initGridData();
+        this.render();
+    }
+
+    // Initialize data array
+    initGridData() {
+        for (let r = 0; r < this.rows; r++) {
+            const row = [];
+            for (let c = 0; c < this.cols; c++) {
+                row.push(this.createDefaultCell());
+            }
+            this.gridData.push(row);
+        }
+    }
+
+    createDefaultCell() {
+        return {
+            type: 'editable',
+            color: 'bg-white',
+            value: ''
+        };
+    }
+
+    updateDimensions() {
+        const newW = parseInt(document.getElementById('grid-width').value);
+        const newH = parseInt(document.getElementById('grid-height').value);
+
+        if (isNaN(newW) || isNaN(newH) || newW < 1 || newH < 1) {
+            alert("Please enter valid positive numbers for dimensions.");
+            return;
+        }
+
+        // Create new grid preserving old data
+        const newGrid = [];
+        for (let r = 0; r < newH; r++) {
+            const row = [];
+            for (let c = 0; c < newW; c++) {
+                if (r < this.rows && c < this.cols) {
+                    // Copy existing cell
+                    row.push({ ...this.gridData[r][c] });
+                } else {
+                    // New cell
+                    row.push(this.createDefaultCell());
+                }
+            }
+            newGrid.push(row);
+        }
+
+        this.gridData = newGrid;
+        this.rows = newH;
+        this.cols = newW;
+
+        this.render();
+    }
+
+    setMode(mode) {
+        this.mode = mode;
+        const container = document.getElementById('grid-container');
+        const toolbar = document.getElementById('edit-toolbar');
+        const status = document.getElementById('status-text');
+        
+        // UI Toggle
+        document.getElementById('btn-mode-edit').classList.toggle('active-mode', mode === 'edit');
+        document.getElementById('btn-mode-solve').classList.toggle('active-mode', mode === 'solve');
+
+        if (mode === 'edit') {
+            container.classList.remove('solve-mode');
+            container.classList.add('edit-mode');
+            toolbar.style.display = 'flex'; // Show tools
+            status.textContent = "Design Mode: Click cells to apply properties. Change tools above.";
+        } else {
+            container.classList.remove('edit-mode');
+            container.classList.add('solve-mode');
+            toolbar.style.display = 'none'; // Hide tools
+            status.textContent = "Solve Mode: Type into the white/colored cells. Gray cells are blockers.";
+        }
+
+        this.render();
+    }
+
+    setTool(category, value) {
+        this.activeTool = { category, value };
+        
+        // Update UI buttons
+        document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+        // Find button that matches this tool
+        const buttons = document.querySelectorAll('.tool-btn');
+        buttons.forEach(btn => {
+            const onClickText = btn.getAttribute('onclick');
+            if (onClickText && onClickText.includes(`'${category}', '${value}'`)) {
+                btn.classList.add('active');
+            }
+        });
+    }
+
+    handleCellClick(r, c) {
+        if (this.mode !== 'edit') return;
+
+        const cell = this.gridData[r][c];
+        
+        if (this.activeTool.category === 'status') {
+            cell.type = this.activeTool.value;
+        } else if (this.activeTool.category === 'color') {
+            cell.color = this.activeTool.value;
+        }
+
+        // Re-render just this cell or full grid? Full grid is easier for state sync
+        this.render();
+    }
+
+    handleInput(r, c, value) {
+        if (this.mode === 'solve') {
+            this.gridData[r][c].value = value;
+        }
+    }
+
+    render() {
+        const container = document.getElementById('grid-container');
+        container.innerHTML = '';
+        
+        // Set CSS Grid layout
+        container.style.gridTemplateColumns = `repeat(${this.cols}, 40px)`;
+        container.style.gridTemplateRows = `repeat(${this.rows}, 40px)`;
+
+        for (let r = 0; r < this.rows; r++) {
+            for (let c = 0; c < this.cols; c++) {
+                const data = this.gridData[r][c];
+                const div = document.createElement('div');
+                
+                // Base Classes
+                div.className = `cell ${data.color} type-${data.type}`;
+                
+                if (this.mode === 'edit') {
+                    // Interaction for Edit Mode
+                    div.onclick = () => this.handleCellClick(r, c);
+                    
+                    // Show value if any (preview)
+                    if (data.value) div.textContent = data.value;
+
+                } else {
+                    // Interaction for Solve Mode
+                    if (data.type === 'editable') {
+                        const input = document.createElement('input');
+                        input.maxLength = 1;
+                        input.value = data.value;
+                        input.oninput = (e) => this.handleInput(r, c, e.target.value);
+                        div.appendChild(input);
+                    } else {
+                        // Uneditable: Just a gray block
+                        // Per requirement: "shown in light gray"
+                        // The CSS .solve-mode .cell.type-uneditable handles the gray override
+                    }
+                }
+
+                container.appendChild(div);
+            }
+        }
+    }
+}
+
+// Initialize App
+const app = new CrosswordApp();
+
+</script>
+</body>
+</html>
