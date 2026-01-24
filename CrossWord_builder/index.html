@@ -26,6 +26,7 @@
             min-height: 100vh;
             margin: 0;
             padding: 20px;
+            user-select: none; /* Prevent text selection while dragging */
         }
 
         h1 { margin-bottom: 10px; }
@@ -189,6 +190,7 @@
             font-size: 24px;
             position: absolute;
         }
+        /* Custom Border for Editable Cells in Design Mode */
         .edit-mode .cell.type-editable {
             border: 1px inset #423c1a;
         }
@@ -204,10 +206,6 @@
             pointer-events: none;
         }
         
-        /* If user colored a non-editable cell, we might want to hint at it, 
-           but the requirement says "shown in light gray". 
-           We will apply a strong overlay or simple gray override. */
-
         .solve-mode input {
             width: 100%;
             height: 100%;
@@ -287,7 +285,7 @@
         </div>
         
         <div class="status-bar" id="status-text">
-            Design Mode: Click cells to apply properties. Change tools above.
+            Design Mode: Click and drag to paint cells. Change tools above.
         </div>
     </div>
 
@@ -300,12 +298,18 @@ class CrosswordApp {
         this.cols = 10;
         this.gridData = []; // Stores { type: 'editable'|'uneditable', color: 'bg-white', value: '' }
         this.mode = 'edit'; // 'edit' or 'solve'
+        this.isDragging = false; // Track mouse drag state
         
         // Current active tool
         this.activeTool = {
             category: 'status', // 'status' or 'color'
             value: 'editable'   // 'editable', 'uneditable', 'bg-red', etc.
         };
+
+        // Global mouse up listener to stop dragging even if mouse leaves grid
+        document.addEventListener('mouseup', () => {
+            this.isDragging = false;
+        });
 
         this.initGridData();
         this.render();
@@ -376,7 +380,7 @@ class CrosswordApp {
             container.classList.remove('solve-mode');
             container.classList.add('edit-mode');
             toolbar.style.display = 'flex'; // Show tools
-            status.textContent = "Design Mode: Click cells to apply properties. Change tools above.";
+            status.textContent = "Design Mode: Click and drag to paint cells. Change tools above.";
         } else {
             container.classList.remove('edit-mode');
             container.classList.add('solve-mode');
@@ -413,8 +417,12 @@ class CrosswordApp {
             cell.color = this.activeTool.value;
         }
 
-        // Re-render just this cell or full grid? Full grid is easier for state sync
-        this.render();
+        // OPTIMIZATION: Update DOM directly for smooth dragging
+        // This avoids destroying and rebuilding the whole grid while dragging
+        const el = document.getElementById(`cell-${r}-${c}`);
+        if (el) {
+            el.className = `cell ${cell.color} type-${cell.type}`;
+        }
     }
 
     handleInput(r, c, value) {
@@ -477,28 +485,43 @@ class CrosswordApp {
                 const data = this.gridData[r][c];
                 const div = document.createElement('div');
                 
-                // Base Classes
+                div.id = `cell-${r}-${c}`; // Add ID for direct access
                 div.className = `cell ${data.color} type-${data.type}`;
                 
-                // Highlight Headers on hover
-                div.onmouseenter = () => this.highlightHeaders(r, c);
+                // MOUSE EVENTS FOR DRAGGING & HOVER
+                
+                // Mouse Down: Start dragging and paint current cell
+                div.onmousedown = (e) => {
+                    if (this.mode === 'edit') {
+                        e.preventDefault(); // Prevent browser native drag
+                        this.isDragging = true;
+                        this.handleCellClick(r, c);
+                    }
+                };
+
+                // Mouse Enter: Highlight headers AND paint if dragging
+                div.onmouseenter = () => {
+                    this.highlightHeaders(r, c);
+                    if (this.mode === 'edit' && this.isDragging) {
+                        this.handleCellClick(r, c);
+                    }
+                };
+
                 div.onmouseleave = () => this.clearHighlights();
 
+                // Interactions based on mode
                 if (this.mode === 'edit') {
-                    // Interaction for Edit Mode
-                    div.onclick = () => this.handleCellClick(r, c);
-                    
-                    // Show value if any (preview)
+                    // Show value preview if any
                     if (data.value) div.textContent = data.value;
 
                 } else {
-                    // Interaction for Solve Mode
+                    // Solve Mode
                     if (data.type === 'editable') {
                         const input = document.createElement('input');
                         input.maxLength = 1;
                         input.value = data.value;
                         input.oninput = (e) => this.handleInput(r, c, e.target.value);
-                        // Prevent event bubbling so headers don't flicker on input focus
+                        // Ensure highlighting works over input
                         input.onmouseenter = () => this.highlightHeaders(r, c);
                         div.appendChild(input);
                     }
@@ -516,4 +539,3 @@ const app = new CrosswordApp();
 </script>
 </body>
 </html>
-
