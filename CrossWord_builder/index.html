@@ -153,6 +153,25 @@
             font-weight: bold;
         }
 
+        /* Header Cells */
+        .header-cell {
+            background-color: #e9ecef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            color: #666;
+            font-weight: bold;
+            user-select: none;
+        }
+        .header-highlight {
+            background-color: #6c757d !important;
+            color: white !important;
+        }
+        .corner-cell {
+            background-color: #dee2e6;
+        }
+
         /* Colors */
         .bg-white { background-color: var(--c-white); }
         .bg-red { background-color: var(--c-red); }
@@ -401,15 +420,56 @@ class CrosswordApp {
         }
     }
 
+    highlightHeaders(r, c) {
+        // Clear previous
+        document.querySelectorAll('.header-highlight').forEach(el => el.classList.remove('header-highlight'));
+        
+        // Highlight new
+        const rowHeader = document.getElementById(`header-row-${r}`);
+        const colHeader = document.getElementById(`header-col-${c}`);
+        if(rowHeader) rowHeader.classList.add('header-highlight');
+        if(colHeader) colHeader.classList.add('header-highlight');
+    }
+
+    clearHighlights() {
+        document.querySelectorAll('.header-highlight').forEach(el => el.classList.remove('header-highlight'));
+    }
+
     render() {
         const container = document.getElementById('grid-container');
         container.innerHTML = '';
         
-        // Set CSS Grid layout
-        container.style.gridTemplateColumns = `repeat(${this.cols}, 40px)`;
-        container.style.gridTemplateRows = `repeat(${this.rows}, 40px)`;
+        const headerSize = '25px';
+        const cellSize = '40px';
 
+        // Set CSS Grid layout: Add 1 extra row and column for headers
+        container.style.gridTemplateColumns = `${headerSize} repeat(${this.cols}, ${cellSize})`;
+        container.style.gridTemplateRows = `${headerSize} repeat(${this.rows}, ${cellSize})`;
+
+        // 1. Render Top-Left Corner (Empty)
+        const corner = document.createElement('div');
+        corner.className = 'header-cell corner-cell';
+        container.appendChild(corner);
+
+        // 2. Render Top Column Headers
+        for (let c = 0; c < this.cols; c++) {
+            const colHeader = document.createElement('div');
+            colHeader.className = 'header-cell';
+            colHeader.textContent = c + 1;
+            colHeader.id = `header-col-${c}`;
+            container.appendChild(colHeader);
+        }
+
+        // 3. Render Rows (Header + Cells)
         for (let r = 0; r < this.rows; r++) {
+            // Row Header
+            const rowHeader = document.createElement('div');
+            rowHeader.className = 'header-cell';
+            rowHeader.textContent = r + 1;
+            rowHeader.id = `header-row-${r}`;
+            container.appendChild(rowHeader);
+
+            // Cells
             for (let c = 0; c < this.cols; c++) {
                 const data = this.gridData[r][c];
                 const div = document.createElement('div');
@@ -417,6 +477,10 @@ class CrosswordApp {
                 // Base Classes
                 div.className = `cell ${data.color} type-${data.type}`;
                 
+                // Highlight Headers on hover
+                div.onmouseenter = () => this.highlightHeaders(r, c);
+                div.onmouseleave = () => this.clearHighlights();
+
                 if (this.mode === 'edit') {
                     // Interaction for Edit Mode
                     div.onclick = () => this.handleCellClick(r, c);
@@ -431,11 +495,9 @@ class CrosswordApp {
                         input.maxLength = 1;
                         input.value = data.value;
                         input.oninput = (e) => this.handleInput(r, c, e.target.value);
+                        // Prevent event bubbling so headers don't flicker on input focus
+                        input.onmouseenter = () => this.highlightHeaders(r, c);
                         div.appendChild(input);
-                    } else {
-                        // Uneditable: Just a gray block
-                        // Per requirement: "shown in light gray"
-                        // The CSS .solve-mode .cell.type-uneditable handles the gray override
                     }
                 }
 
